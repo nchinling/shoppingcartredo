@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles.css">
+
+    <style>
+        .error{
+            color: red;
+        }
+
+    </style>
 
       <!-- Bootstrap -->
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
@@ -12,39 +18,69 @@
 
 </head>
 <body>
+    <form method="POST" data-th-action="@{/}" data-th-object="${item}">
 
-    <div class = "container">
-    <h1> Welcome to Amazing Web Grocery Shopping Cart</h1>
+        <table>
+            <tr>
+                <td>Item:</td>
+                <td>
+                    <select name="item" data-th-field="*{item}">
+                        <option value="">Select item</option>
+                        <option value="apple">Apple</option>
+                        <option value="orange">Orange</option>
+                        <option value="bread">Bread</option>
+                        <option value="cheese">Cheese</option>
+                        <option value="chicken">Chicken</option>
+                        <option value="mineral_water">Mineral Water</option>
+                        <option value="instant_noodles">Instant Noodles</option>
+                    </select>
+                    <div data-th-if="${#fields.hasErrors('item')}">
+                        <span data-th-errors="*{item}"></span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Quantity:</td>
+                <td>
+                    <input type="number" name="quantity" size="4" placeholder="Quantity" data-th-field="*{quantity}">
+                    <div data-th-if="${#fields.hasErrors('quantity')}">
+                        <span data-th-errors="*{quantity}"></span>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-    <h2> Shopping Cart </h2>
+        <!-- If shopping cart is empty. -->
+        <div style="margin-top: 2vh; margin-botton: 2vh;" data-th-if="${#lists.isEmpty(order.contents)}">
+            <h2>Your cart is currently empty</h2>
+        </div>
 
-    <form action="#"
-    data-th-action="@{/}"
-    data-th-object="${item}" 
+        <!-- to display shopping cart table -->
+        <table border="1" style="margin-top: 2vh; margin-bottom: 2vh;"
+                data-th-unless="${#lists.isEmpty(order.contents)}">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-th-each="i: ${order.contents}">
+                    <td><span data-th-text="${i.item}"></span></td>
+                    <td><span data-th-text="${i.quantity}"></span></td>
+                </tr>
+            </tbody>
+        </table>
 
-    method = "POST">
+        <!-- //submission buttons  -->
+        <div>
+            <button type="submit">Add</button>
+            <button type="submit" formmethod="GET" data-th-formaction="@{/shippingaddress}">
+                Next
+            </button>
+        </div>
 
-    <p>
-        <label>Item:</label>
-     
-            <select data-th:field="*{item}">
-                <option value="">Select an option</option>
-                <option value="milk">Milk</option>
-                <option value="coffeepowder">Coffee Powder</option>
-                <option value="orange">Orange</option>
-                <option value="orange">Cakee</option>
-            </select>
-      
-            <span
-            class = "error"
-            data-th-if="${#fields.hasErrors('item')}"
-            data-th-errors="*{item}" >
-            </span>
-    </p>
-        <br>
 
-    </form>
-    </div>
 
  <!-- Bootstrap - Javascript -->
  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
