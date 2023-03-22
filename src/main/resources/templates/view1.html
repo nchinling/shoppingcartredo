@@ -27,34 +27,24 @@
     <p>
         <label>Item:</label>
      
-            <select th:field="*{name}">
+            <select data-th:field="*{item}">
                 <option value="">Select an option</option>
                 <option value="milk">Milk</option>
                 <option value="coffeepowder">Coffee Powder</option>
                 <option value="orange">Orange</option>
+                <option value="orange">Cakee</option>
             </select>
       
             <span
             class = "error"
-            data-th-if="${#fields.hasErrors('name')}"
-            data-th-errors="*{name}" >
+            data-th-if="${#fields.hasErrors('item')}"
+            data-th-errors="*{item}" >
             </span>
     </p>
         <br>
 
-    <p>
-        <label for="quantity">Quantity:</label>
-        <input type="number" data-th-field="*{quantity}" 
-                         th:value="${0}">
-        <span
-            class = "error"
-            data-th-if="${#fields.hasErrors('quantity')}"
-            data-th-errors="*{quantity}" >
-        </span>
-        <br>
-
+    </form>
     </div>
-
 
  <!-- Bootstrap - Javascript -->
  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
