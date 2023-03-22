@@ -15,6 +15,7 @@ import shoppingcartredo.shoppingcartredo.model.Order;
 import shoppingcartredo.shoppingcartredo.model.Quotation;
 import shoppingcartredo.shoppingcartredo.service.QuotationService;
 import shoppingcartredo.shoppingcartredo.model.Address;
+import shoppingcartredo.shoppingcartredo.model.Invoice;
 import shoppingcartredo.shoppingcartredo.model.Item;
 
 @Controller
@@ -66,9 +67,9 @@ public class PurchaseOrderController {
     @GetMapping(path="/shippingaddress")
     public String getAddress(Model m, HttpSession session){
         
-        if (!hasOrder(session)) {
-			return "redirect:/";
-		}
+        // if (!hasOrder(session)) {
+		// 	return "redirect:/";
+		// }
 
         //order must be added as webpage contains ${order}
         m.addAttribute("address", new Address());
@@ -82,10 +83,9 @@ public class PurchaseOrderController {
 	public String postCheckout(Model model, HttpSession session
 			, @ModelAttribute @Valid Address address, BindingResult binding) {
 
-
-		if (!hasOrder(session)) {
-			return "redirect:/";
-		}
+		// if (!hasOrder(session)) {
+		// 	return "redirect:/";
+		// }
 
 		if (binding.hasErrors()) 
 			return "view2";
@@ -96,19 +96,19 @@ public class PurchaseOrderController {
             session.setAttribute("order", order);
         }
 
-		
+		Quotation quotation;
 		try {
-			Quotation quotation = quoteSvc.getQuotations(order);
+			quotation = quoteSvc.getQuotations(order);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			model.addAttribute("error", ex.getMessage());
 			return "view2";
 		}
 
-		// Invoice invoice = poSvc.createInvoice(shippingAddress, order, quotation);
-		// model.addAttribute(ATTR_INVOICE, invoice);
+		Invoice invoice = quoteSvc.createInvoice(address, order, quotation);
+		model.addAttribute("invoice", invoice);
 
-		// sess.invalidate();
+		session.invalidate();
 
 		return "view3";
 	}

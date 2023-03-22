@@ -1,9 +1,21 @@
 package shoppingcartredo.shoppingcartredo.service;
 
+import java.io.StringReader;
 import java.util.List;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+import shoppingcartredo.shoppingcartredo.model.Address;
+import shoppingcartredo.shoppingcartredo.model.Invoice;
+import shoppingcartredo.shoppingcartredo.model.Item;
 import shoppingcartredo.shoppingcartredo.model.Order;
 import shoppingcartredo.shoppingcartredo.model.Quotation;
 
@@ -17,15 +29,28 @@ public class QuotationService {
     //before sending it to a list. The list is returned for further processing. 
     public Quotation getQuotations(Order order) throws Exception {
 		return getQuotations(
-				order.getContents().stream()
+                    //this is List<string> order
+                    order.getContents().stream()
 					.map(v -> v.getItem())
 					.toList()
 				);
+
+		//without use of streams
+		// List<String> items = new ArrayList<>();
+		// List<OrderItem> contents = order.getContents();
+		
+		// for (int i = 0; i < contents.size(); i++) {
+		// 	OrderItem item = contents.get(i);
+		// 	String itemName = item.getItem();
+		// 	items.add(itemName);
+		// }
 	}
 
 
     public Quotation getQuotations(List<String> order) throws Exception {
-		JsonArrayBuilder arrBuilder = Json.createArrayBuilder(order);
+		
+        //need to passed to QSys as a JSON array. 
+        JsonArrayBuilder arrBuilder = Json.createArrayBuilder(order);
 
 		RequestEntity<String> req = RequestEntity.post(QUOTATION)
 				.accept(MediaType.APPLICATION_JSON)
@@ -54,6 +79,22 @@ public class QuotationService {
 			});
 
 		return quotation;
+	}
+
+	public Invoice createInvoice(Address address, Order order, Quotation quotation) {
+
+		float total = 0f;
+
+		Invoice invoice = new Invoice();
+		invoice.setInvoiceId(quotation.getQuoteId());
+
+		for (Item item: order.getContents())
+			total += quotation.getQuotation(item.getItem()) * item.getQuantity();
+		invoice.setTotal(total);
+
+		invoice.setAddress(address);
+
+		return invoice;
 	}
 
     
