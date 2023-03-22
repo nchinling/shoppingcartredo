@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+
+      <!-- Bootstrap -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <title>Landing Page</title>
+
+</head>
+<body>
+
+    <div class = "container">
+    <h1> Welcome to Amazing Web Grocery Shopping Cart</h1>
+
+    <h2> Shopping Cart </h2>
+
+    <form action="#"
+    data-th-action="@{/}"
+    data-th-object="${item}" 
+
+    method = "POST">
+
+    <p>
+        <label>Item:</label>
+     
+            <select th:field="*{name}">
+                <option value="">Select an option</option>
+                <option value="milk">Milk</option>
+                <option value="coffeepowder">Coffee Powder</option>
+                <option value="orange">Orange</option>
+            </select>
+      
+            <span
+            class = "error"
+            data-th-if="${#fields.hasErrors('name')}"
+            data-th-errors="*{name}" >
+            </span>
+    </p>
+        <br>
+
+    <p>
+        <label for="quantity">Quantity:</label>
+        <input type="number" data-th-field="*{quantity}" 
+                         th:value="${0}">
+        <span
+            class = "error"
+            data-th-if="${#fields.hasErrors('quantity')}"
+            data-th-errors="*{quantity}" >
+        </span>
+        <br>
+
+    </div>
+
+
+ <!-- Bootstrap - Javascript -->
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
+</body>
+</html>
